@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Maze</title>
+        <script src="maze.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+        <link rel="stylesheet" href="maze.css">
+       </head>
+    <body onload="init()">
+        <div class="container">
+            <div id="main" class="columns">
+                <div id="main" class="column col-10">
+                    <div class="columns">
+                        <div id="content" class="column col-11 col-mx-auto col-text-center">
+                            <div class="columns">
+                                <div class="column col-12">
+                                    <div class="input-group">
+                                        <span class="input-group-addon addon-sm">Type:</span>
+                                        <select id="sltType" class="form-select select-sm" onchange="onSltType()">
+                                            <option>Maze1</option>
+                                            <option>Maze2</option>
+                                        </select>
+                                        <div></div> 
+                                        <label class="form-checkbox input-sm">
+                                            <input id="chkAnimated" type="checkbox" class="input-sm" name="maze" checked><i class="form-icon"></i>Animated
+                                        </label>
+                                        <span class="input-group-addon addon-sm">Columns:</span>
+                                        <input id="cols" class="form-input input-sm" type="number" placeholder="90" value="90">
+                                        <span class="input-group-addon addon-sm">Rows:</span>
+                                        <input id="rows" class="form-input input-sm" type="number" placeholder="30" value="30">
+                                        <span class="input-group-addon addon-sm">Density:</span>
+                                        <input id="density" class="form-input input-sm" type="number" placeholder="60" value="60" disabled>
+                                        <button id="btnCreateMaze" class="btn btn-sm input-group-btn" onclick="onCreate()">Create</button>
+                                        <button id="btnClear" class="btn btn-sm input-group-btn" onclick="onClear()">Clear</button>
+                                        <button id="btnInterrupt" class="btn btn-sm input-group-btn" onclick="onInterrupt()">Interrupt</button>
+                                        <button id="btnAutoTest" class="btn btn-sm input-group-btn" onclick="onTest()">Auto test</button>
+                                        <label class="form-checkbox input-sm">
+                                            <input id="chkProcess" type="checkbox" class="input-sm" name="process" checked onclick="onDisplayProcess()"><i class="form-icon"></i>Display process of solution
+                                        </label>
+                                        <a class="btn btn-sm" href="#help">Help</a>
+                                        <div class="modal modal-lg" id="help">
+                                            <a class="modal-overlay" href="#modals" aria-label="Close"></a>
+                                            <div class="modal-container" role="document">
+                                                <div class="modal-header"><a class="btn btn-clear float-right" href="#modals" aria-label="Close"></a>
+                                                    <div class="modal-title h3">Introduction</div>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="content col-text-left">
+                                                        <p>The game is simple. Choose the size and type of the maze, selecet starting and finishing point, and the program will try to solve it 4 ways.</p>
+                                                        
+                                                        <h4>Features</h4>
+                                                            <ul>
+                                                                <li>Two types of mazes: Use the drop-down menu <strong>Type</strong> to choose between:
+                                                                    <ul>
+                                                                        <li>A connected maze, meaning a guaranteed solution</li>
+                                                                        <li>A randomly generated maze with no such property</li>
+                                                                    </ul>
+                                                                </li>
+                                                                <li>Customizable maze size: Set the number of <strong>Columns & Rows</strong> in corresponding text boxes. For the second type of maze, <strong>Density</strong> determines the proportion of accessible area in the maze</li>
+                                                                <li>Togglable animation: Toggle on/off <strong>Animated</strong> to display/hide the process of generating the maze. Toggle on/off <strong>Display process of solution</strong> to display/hide the process of solving the maze.</li>
+                                                                <li>Solve the maze in 4 ways: The four algorithms are listed above the canvas. After generating the maze, select the starting/finishing point by <strong>clicking on the first canvas</strong>.</li>
+                                                                <li>Clear current solution: Click <strong>Clear</strong> to remove current solution.</li>
+                                                                <li>Interrupt solving process: Tired of waiting? Click <strong>Interrupt</strong> to stop the program.</li>
+                                                                <li>Auto test: Click <strong>Auto test</strong> to test the speed of each algorithm. The program will randomly select a set of starting/finishing points and solve the maze for 100 times, recording the time & total number of iterations for each algorithm.</li>
+                                                            </ul>
+                                                        <h4>Legend</h4>
+                                                            <ul>
+                                                                <li><span style="background-color:black;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Road</li>
+                                                                <li><span style="background-color:gray;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Wall</li>
+                                                                <li><span style="background-color:red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Seaching</li>
+                                                                <li><span style="background-color:yellow;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Solution</li>
+                                                                <li><span style="background-color:#500000;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Discarded</li>
+                                                                <li><span style="background-color:blue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Finishing point</li>
+                                                                <li><span style="background-color:gold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Starting point</li>
+                                                                <li><span style="background-color:purple;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>  Terminated</li>
+                                                            </ul>
+                                                        <h4>Known issues</h4>
+                                                            <p>
+                                                                The fewer mazes the program is solving, the quicker it is. Besides that, the four canvases are freshed only when all four algorithms have completed one iteration.
+                                                                    So the time consumed by each algorithm doesn't accurately reflect how much faster/slower they are compared with one another.</li>              
+                                                            </p>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer"><a class="btn btn-link" href="#modals">Got it!</a></div>
+                                            </div>
+                                        </div>
+
+                                    </div> 
+                                </div>
+                                            
+                                <span class="column col-6">DFS</span>
+                                <span class="column col-6">DFS picking the closest point to finishing point</span>
+                                <div id="maze1" class="column col-6"></div>
+                                <div id="maze2" class="column col-6"></div>
+                                <span id="timer1" class="column col-6">Time: 0.00s    Iterations: 0</span>
+                                <span id="timer2" class="column col-6">Time: 0.00s    Iterations: 0</span>
+                                <hr class="column col-12">
+                                <span class="column col-6">DFS with Euclidean distance as cost</span>
+                                <span class="column col-6">A* ( h = (Manhattan Distance) ^ 2 )</span>
+                                <div id="maze3" class="column col-6"></div>
+                                <div id="maze4" class="column col-6"></div>
+                                <span id="timer3" class="column col-6">Time: 0.00s    Iterations: 0</span>
+                                <span id="timer4" class="column col-6">Time: 0.00s    Iterations: 0</span> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
